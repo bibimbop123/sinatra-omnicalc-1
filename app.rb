@@ -58,3 +58,27 @@ get "/random" do
     "Please provide minimum and maximum values between 1 and 10."
   end
 end
+get "/payment/new" do
+  '<form action="/payment">
+    <label for="apr">APR</label>
+    <input id="apr" name="apr">
+    <label for="yearsRemaining">Number of years</label>
+    <input id="yearsRemaining" name="yearsRemaining">
+    <label for="principal">Principal</label>
+    <input id="principal" name="principal">
+    <button type="submit">Calculate Monthly Payment</button>
+    </form>'
+end
+
+get "/payment" do
+  r = params["apr"].to_f / 1200
+  n = params["yearsRemaining"].to_i * 12
+  pv = params["principal"].to_i
+  
+  payment = (r * pv) / (1 - (1 + r)**-n)
+ 
+  formatted_payment = format("$%.2f", payment.round(2)) 
+  formatted_percentage = format("%.4f%%", (payment / pv) * 100) 
+  
+  "Your payment is #{formatted_payment} (#{formatted_percentage})"
+end
